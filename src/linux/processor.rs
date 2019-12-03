@@ -287,7 +287,6 @@ pub fn get_vendor_id_and_brand() -> (String, String) {
         }
     }
     (vendor_id.unwrap_or_default(), brand.unwrap_or_default())
-
 }
 
 /// get_avg_load returns the system load average value.

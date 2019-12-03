@@ -85,13 +85,16 @@ pub extern crate cache_size;
 pub extern crate pnet_datalink as datalink;
 
 pub use common::{AsU32, DiskType, NetworksIter, Pid, RefreshKind};
-pub use sys::{get_avg_load, get_cpu_frequency, Component, Disk, NetworkData, Networks, Process, ProcessStatus, Processor, System};
-pub use traits::{
-    ComponentExt, DiskExt, NetworkExt, NetworksExt, ProcessExt, ProcessorExt, SystemExt,
-};
 pub use io::IOLoad;
 pub use net::NICLoad;
 pub use num_cpus::{get as get_logical_cores, get_physical as get_physical_cores};
+pub use sys::{
+    get_avg_load, get_cpu_frequency, Component, Disk, NetworkData, Networks, Process,
+    ProcessStatus, Processor, System,
+};
+pub use traits::{
+    ComponentExt, DiskExt, NetworkExt, NetworksExt, ProcessExt, ProcessorExt, SystemExt,
+};
 
 #[cfg(feature = "c-interface")]
 pub use c_interface::*;
@@ -103,8 +106,8 @@ use std::collections::HashMap;
 mod c_interface;
 mod common;
 mod component;
+mod io;
 mod net;
-mod process;
 mod processor;
 mod system;
 mod traits;
@@ -290,7 +293,6 @@ mod test {
     #[test]
     fn test_nic_load() {
         println!("test test_nic_load: {:?}", ::NICLoad::snapshot());
-        println!("test test_nic_load: {:?}", ::NICLoad::current());
     }
 
     #[test]
