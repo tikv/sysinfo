@@ -80,7 +80,7 @@ cfg_if! {
 }
 
 pub use common::{AsU32, DiskType, NetworksIter, Pid, RefreshKind};
-pub use sys::{Component, Disk, NetworkData, Networks, Process, ProcessStatus, Processor, System};
+pub use sys::{get_avg_load, get_cpu_frequency, Component, Disk, NetworkData, Networks, Process, ProcessStatus, Processor, System};
 pub use traits::{
     ComponentExt, DiskExt, NetworkExt, NetworksExt, ProcessExt, ProcessorExt, SystemExt,
 };
@@ -234,5 +234,15 @@ mod test {
                 .all(|(_, proc_)| proc_.memory() == 0),
             false
         );
+    }
+
+    #[test]
+    fn test_get_cpu_frequency() {
+        println!("test get_cpu_frequency: {}", ::get_cpu_frequency());
+    }
+
+    #[test]
+    fn test_get_avg_load() {
+        println!("test get_avg_load: {:?}", ::get_avg_load());
     }
 }

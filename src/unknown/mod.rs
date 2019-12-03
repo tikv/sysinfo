@@ -15,5 +15,5 @@ pub use self::component::Component;
 pub use self::disk::Disk;
 pub use self::network::{NetworkData, Networks};
 pub use self::process::{Process, ProcessStatus};
-pub use self::processor::Processor;
+pub use self::processor::{get_avg_load, get_cpu_frequency, Processor};
 pub use self::system::System;
