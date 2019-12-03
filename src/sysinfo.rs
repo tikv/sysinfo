@@ -89,6 +89,8 @@ pub use traits::{
 pub use c_interface::*;
 pub use utils::get_current_pid;
 
+use std::collections::HashMap;
+
 #[cfg(feature = "c-interface")]
 mod c_interface;
 mod common;
@@ -217,6 +219,35 @@ pub struct LoadAvg {
     pub five: f64,
     /// Average load within fifteen minutes.
     pub fifteen: f64,
+}
+
+/// Returns system wide configuration
+///
+/// # Note
+///
+/// Current only can be used in operating system mounted `procfs`
+pub fn get_sysctl_list() -> HashMap<String, String> {
+    const DIR: &str = "/proc/sys/";
+    let mut result = HashMap::new();
+    for entry in walkdir::WalkDir::new(DIR) {
+        let entry = match entry {
+            Ok(entry) => entry,
+            _ => continue,
+        };
+
+        let content = match std::fs::read_to_string(entry.path()) {
+            Ok(c) => c,
+            _ => continue,
+        };
+
+        let path = match entry.path().to_str() {
+            Some(p) => p,
+            _ => continue,
+        };
+        let name = path.trim_start_matches(DIR).replace("/", ".");
+        result.insert(name, content.trim().to_string());
+    }
+    result
 }
 
 #[cfg(test)]
