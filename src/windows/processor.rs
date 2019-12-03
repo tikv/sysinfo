@@ -5,19 +5,22 @@
 //
 
 use std::collections::HashMap;
+use std::default::Default;
 use std::sync::{Arc, Mutex};
 use std::thread::{self /*, sleep*/, JoinHandle};
 //use std::time::Duration;
 
 use windows::tools::KeyHandler;
+use LoadAvg;
 use ProcessorExt;
 
 use winapi::shared::minwindef::{FALSE, ULONG};
 use winapi::shared::winerror::ERROR_SUCCESS;
 use winapi::um::handleapi::CloseHandle;
 use winapi::um::pdh::{
-    PdhAddCounterW, PdhRemoveCounter, PdhCollectQueryData, PdhCollectQueryDataEx, PdhGetFormattedCounterValue,
-    PdhOpenQueryA, PdhCloseQuery, PDH_FMT_COUNTERVALUE, PDH_FMT_DOUBLE, PDH_FMT_LARGE, PDH_HCOUNTER, PDH_HQUERY,
+    PdhAddCounterW, PdhCloseQuery, PdhCollectQueryData, PdhCollectQueryDataEx,
+    PdhGetFormattedCounterValue, PdhOpenQueryA, PdhRemoveCounter, PDH_FMT_COUNTERVALUE,
+    PDH_FMT_DOUBLE, PDH_FMT_LARGE, PDH_HCOUNTER, PDH_HQUERY,
 };
 use winapi::um::synchapi::{CreateEventA, WaitForSingleObject};
 use winapi::um::winbase::{INFINITE, WAIT_OBJECT_0};
@@ -284,4 +287,14 @@ pub fn get_key_idle(p: &mut Processor) -> &mut Option<KeyHandler> {
 
 pub fn get_key_used(p: &mut Processor) -> &mut Option<KeyHandler> {
     &mut p.key_used
+}
+
+pub fn get_cpu_frequency() -> u64 {
+    // TODO: support windows
+    0
+}
+
+/// get_avg_load returns the system load average value.
+pub fn get_avg_load() -> LoadAvg {
+    LoadAvg::default()
 }
