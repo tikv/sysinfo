@@ -103,6 +103,8 @@ use std::collections::HashMap;
 mod c_interface;
 mod common;
 mod component;
+mod net;
+mod process;
 mod processor;
 mod system;
 mod traits;
@@ -288,6 +290,7 @@ mod test {
     #[test]
     fn test_nic_load() {
         println!("test test_nic_load: {:?}", ::NICLoad::snapshot());
+        println!("test test_nic_load: {:?}", ::NICLoad::current());
     }
 
     #[test]
