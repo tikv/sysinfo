@@ -88,7 +88,7 @@ pub use net::NICLoad;
 pub use num_cpus::{get as get_logical_cores, get_physical as get_physical_cores};
 
 pub use sys::{
-    get_avg_load, get_cpu_frequency, Component, Disk, DiskType, NetworkData, Process,
+    get_avg_load, get_cpu_frequency, get_vendor_id, Component, Disk, DiskType, NetworkData, Process,
     ProcessStatus, Processor, System,
 };
 pub use traits::{ComponentExt, DiskExt, NetworkExt, ProcessExt, ProcessorExt, SystemExt};
