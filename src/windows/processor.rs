@@ -289,6 +289,7 @@ pub fn get_key_used(p: &mut Processor) -> &mut Option<KeyHandler> {
     &mut p.key_used
 }
 
+/// get_cpu_frequency returns the CPU frequency in MHz
 pub fn get_cpu_frequency() -> u64 {
     // TODO: support windows
     0

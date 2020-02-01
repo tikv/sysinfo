@@ -1,6 +1,4 @@
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
 
 /// IOLoad represents current system block devices IO statistics
 #[derive(Debug)]
@@ -45,24 +43,30 @@ impl IOLoad {
     ///
     /// # Notes
     ///
-    /// Current don't support non-unix operating system
+    /// Currently not supported outside Unix. On those operating systems, this
+    /// method always returns an empty map.
     #[cfg(not(unix))]
-    pub fn snapshot() -> HashMap<String, NICLoad> {
+    pub fn snapshot() -> HashMap<String, Self> {
         HashMap::new()
     }
 
     /// Returns the current IO statistics
+    ///
+    /// # Notes
+    ///
+    /// Currently not supported outside Unix. On those operating systems, this
+    /// method always returns an empty map.
     #[cfg(unix)]
-    pub fn snapshot() -> HashMap<String, IOLoad> {
+    pub fn snapshot() -> HashMap<String, Self> {
         let mut result = HashMap::new();
         // https://www.kernel.org/doc/Documentation/block/stat.txt
         if let Ok(dir) = std::fs::read_dir("/sys/block/") {
             for entry in dir {
                 if let Ok(entry) = entry {
                     let stat = entry.path().join("stat");
-                    let mut s = String::new();
-                    if let Err(_) = File::open(stat).and_then(|mut f| f.read_to_string(&mut s)) {
-                        continue;
+                    let s = match std::fs::read_to_string(stat) {
+                        Ok(s) => s,
+                        Err(_) => continue,
                     };
                     let parts = s
                         .split_whitespace()
@@ -71,7 +75,7 @@ impl IOLoad {
                     if parts.len() != 11 {
                         continue;
                     }
-                    let load = IOLoad {
+                    let load = Self {
                         read_io: parts[0],
                         read_merges: parts[1],
                         read_sectors: parts[2],

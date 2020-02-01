@@ -32,15 +32,21 @@ impl NICLoad {
     ///
     /// # Notes
     ///
-    /// Current don't support non-unix operating system
+    /// Currently not supported outside Unix. On those operating systems, this
+    /// method always returns an empty map.
     #[cfg(not(unix))]
-    pub fn snapshot() -> HashMap<String, NICLoad> {
+    pub fn snapshot() -> HashMap<String, Self> {
         HashMap::new()
     }
 
     /// Returns the current network interfaces card statistics
+    ///
+    /// # Notes
+    ///
+    /// Currently not supported outside Unix. On those operating systems, this
+    /// method always returns an empty map.
     #[cfg(unix)]
-    pub fn snapshot() -> HashMap<String, NICLoad> {
+    pub fn snapshot() -> HashMap<String, Self> {
         let mut result = HashMap::new();
         if let Ok(dir) = std::fs::read_dir("/sys/class/net/") {
             for entry in dir {
@@ -53,7 +59,7 @@ impl NICLoad {
                             .parse()
                             .unwrap_or_default()
                     };
-                    let load = NICLoad {
+                    let load = Self {
                         rx_bytes: read("rx_bytes"),
                         tx_bytes: read("tx_bytes"),
                         rx_packets: read("rx_packets"),
