@@ -39,12 +39,3 @@ impl ProcessorExt for Processor {
         ""
     }
 }
-
-pub fn get_cpu_frequency() -> u64 {
-    0
-}
-
-/// get_avg_load returns the system load average value.
-pub fn get_avg_load() -> LoadAvg {
-    LoadAvg::default()
-}
