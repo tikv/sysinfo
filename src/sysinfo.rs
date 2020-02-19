@@ -87,11 +87,8 @@ pub extern crate pnet_datalink as datalink;
 pub use common::{AsU32, DiskType, NetworksIter, Pid, RefreshKind};
 pub use io::IOLoad;
 pub use net::NICLoad;
-pub use num_cpus::get_physical as get_physical_cores;
-pub use sys::{
-    Component, Disk, NetworkData, Networks, Process,
-    ProcessStatus, Processor, System,
-};
+pub use num_cpus::{get as get_logical_cores, get_physical as get_physical_cores};
+pub use sys::{Component, Disk, NetworkData, Networks, Process, ProcessStatus, Processor, System};
 pub use traits::{
     ComponentExt, DiskExt, NetworkExt, NetworksExt, ProcessExt, ProcessorExt, SystemExt,
 };
@@ -288,6 +285,11 @@ mod test {
     #[test]
     fn test_io_load() {
         println!("test test_io_load: {:?}", ::IOLoad::snapshot());
+    }
+
+    #[test]
+    fn test_get_logical_cores() {
+        assert_ne!(::get_logical_cores(), 0, "expect none-zero logical core");
     }
 
     #[test]
