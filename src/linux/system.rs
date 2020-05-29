@@ -39,6 +39,9 @@ pub struct System {
     process_list: Process,
     mem_total: u64,
     mem_free: u64,
+    mem_buffers: u64,
+    mem_page_cache: u64,
+    mem_slab_reclaimable: u64,
     swap_total: u64,
     swap_free: u64,
     processors: Vec<Processor>,
@@ -132,6 +135,9 @@ impl SystemExt for System {
             process_list: Process::new(0, None, 0),
             mem_total: 0,
             mem_free: 0,
+            mem_buffers: 0,
+            mem_page_cache: 0,
+            mem_slab_reclaimable: 0,
             swap_total: 0,
             swap_free: 0,
             processors: Vec::new(),
@@ -154,7 +160,10 @@ impl SystemExt for System {
             for line in data.split('\n') {
                 let field = match line.split(':').next() {
                     Some("MemTotal") => &mut self.mem_total,
-                    Some("MemAvailable") | Some("MemFree") => &mut self.mem_free,
+                    Some("MemFree") => &mut self.mem_free,
+                    Some("Buffers") => &mut self.mem_buffers,
+                    Some("Cached") => &mut self.mem_page_cache,
+                    Some("SReclaimable") => &mut self.mem_slab_reclaimable,
                     Some("SwapTotal") => &mut self.swap_total,
                     Some("SwapFree") => &mut self.swap_free,
                     _ => continue,
@@ -256,7 +265,7 @@ impl SystemExt for System {
     }
 
     fn get_used_memory(&self) -> u64 {
-        self.mem_total - self.mem_free
+        self.mem_total - self.mem_free - self.mem_buffers - self.mem_page_cache - self.mem_slab_reclaimable
     }
 
     fn get_total_swap(&self) -> u64 {
