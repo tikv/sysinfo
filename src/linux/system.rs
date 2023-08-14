@@ -213,20 +213,40 @@ impl System {
                     ));
                     i += 1;
                 } else {
-                    parts.next(); // we don't want the name again
-                    self.processors[i].set(
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                        parts.next().map(|v| to_u64(v)).unwrap_or(0),
-                    );
-                    self.processors[i].frequency = get_cpu_frequency(i);
+                    // Prevents "index out of bounds" error caused by non-stop cpu expansion.
+                    if i < self.processors.len() {
+                        parts.next(); // we don't want the name again
+                        self.processors[i].set(
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                        );
+                        self.processors[i].frequency = get_cpu_frequency(i);
+                    } else {
+                        self.processors.push(Processor::new_with_values(
+                            to_str!(parts.next().unwrap_or(&[])),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            parts.next().map(|v| to_u64(v)).unwrap_or(0),
+                            get_cpu_frequency(i),
+                            vendor_id.clone(),
+                            brand.clone(),
+                        ));
+                    }
                     i += 1;
                 }
                 count += 1;
