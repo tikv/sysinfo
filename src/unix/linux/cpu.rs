@@ -154,19 +154,40 @@ impl CpusWrapper {
                                 ),
                             });
                         } else {
-                            parts.next(); // we don't want the name again
-                            self.cpus[i].inner.set(
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                                parts.next().map(to_u64).unwrap_or(0),
-                            );
+                            // Prevents "index out of bounds" error caused by non-stop cpu expansion.
+                            // CP from https://github.com/tikv/sysinfo/commit/5a1bcf08816979624ef2ad79cfb896de432a9501.
+                            if i < self.cpus.len() {
+                                parts.next(); // we don't want the name again
+                                self.cpus[i].set(
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                );
+                            } else {
+                                self.cpus.push(Cpu::new_with_values(
+                                    to_str!(parts.next().unwrap_or(&[])),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    parts.next().map(to_u64).unwrap_or(0),
+                                    0,
+                                    vendor_id.clone(),
+                                    brand.clone(),
+                                ));
+                            }
                         }
 
                         i += 1;
